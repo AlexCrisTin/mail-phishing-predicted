@@ -16,7 +16,7 @@ import json
 IMG_SIZE = 96  # Tăng kích thước ảnh lên 96x96
 BATCH_SIZE = 32
 EPOCHS = 100  # Tăng số epochs
-LEARNING_RATE = 0.001
+LEARNING_RATE = 0.01
 
 # Đường dẫn dataset
 train_path = 'face/train'
@@ -130,7 +130,7 @@ def create_improved_emotion_model():
 # Learning rate scheduler
 def lr_schedule(epoch):
     """Learning rate scheduler"""
-    initial_lr = 0.001
+    initial_lr = 0.01
     if epoch < 20:
         return initial_lr
     elif epoch < 40:
@@ -147,7 +147,7 @@ model = create_improved_emotion_model()
 model.compile(
     optimizer=Adam(learning_rate=LEARNING_RATE),
     loss='categorical_crossentropy',
-    metrics=['accuracy', 'top_3_accuracy']
+    metrics=['accuracy']
 )
 
 # In thông tin model
@@ -164,14 +164,14 @@ callbacks = [
     ),
     EarlyStopping(
         monitor='val_accuracy',
-        patience=15,  # Tăng patience
+        patience=5,  # Giảm patience để dừng sớm hơn
         restore_best_weights=True,
         verbose=1
     ),
     ReduceLROnPlateau(
         monitor='val_loss',
         factor=0.5,
-        patience=8,  # Tăng patience
+        patience=3,  # Giảm patience để giảm learning rate sớm hơn
         min_lr=1e-7,
         verbose=1
     ),
@@ -217,24 +217,17 @@ def plot_training_history(history):
     axes[0, 1].legend()
     axes[0, 1].grid(True)
     
-    # Top-3 Accuracy
-    if 'top_3_accuracy' in history.history:
-        axes[1, 0].plot(history.history['top_3_accuracy'], label='Training Top-3 Accuracy')
-        axes[1, 0].plot(history.history['val_top_3_accuracy'], label='Validation Top-3 Accuracy')
-        axes[1, 0].set_title('Top-3 Accuracy')
-        axes[1, 0].set_xlabel('Epoch')
-        axes[1, 0].set_ylabel('Top-3 Accuracy')
-        axes[1, 0].legend()
-        axes[1, 0].grid(True)
-    
     # Learning Rate
     if 'lr' in history.history:
-        axes[1, 1].plot(history.history['lr'])
-        axes[1, 1].set_title('Learning Rate')
-        axes[1, 1].set_xlabel('Epoch')
-        axes[1, 1].set_ylabel('Learning Rate')
-        axes[1, 1].set_yscale('log')
-        axes[1, 1].grid(True)
+        axes[1, 0].plot(history.history['lr'])
+        axes[1, 0].set_title('Learning Rate')
+        axes[1, 0].set_xlabel('Epoch')
+        axes[1, 0].set_ylabel('Learning Rate')
+        axes[1, 0].set_yscale('log')
+        axes[1, 0].grid(True)
+    
+    # Hide the unused subplot
+    axes[1, 1].axis('off')
     
     plt.tight_layout()
     plt.savefig('improved_training_history.png', dpi=300, bbox_inches='tight')
@@ -245,9 +238,8 @@ plot_training_history(history)
 
 # Đánh giá model trên test set
 print("\nDanh gia improved model tren test set...")
-test_loss, test_accuracy, test_top3_accuracy = model.evaluate(test_generator, verbose=1)
+test_loss, test_accuracy = model.evaluate(test_generator, verbose=1)
 print(f"Test Accuracy: {test_accuracy:.4f}")
-print(f"Test Top-3 Accuracy: {test_top3_accuracy:.4f}")
 print(f"Test Loss: {test_loss:.4f}")
 
 # Dự đoán trên test set
@@ -275,7 +267,6 @@ print(classification_report(true_classes, predicted_classes, target_names=emotio
 # Lưu kết quả
 results = {
     'test_accuracy': float(test_accuracy),
-    'test_top3_accuracy': float(test_top3_accuracy),
     'test_loss': float(test_loss),
     'emotion_classes': emotion_classes,
     'model_architecture': 'Improved CNN with 4 Conv blocks + GlobalAveragePooling + Dense layers',
