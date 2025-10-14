@@ -1,0 +1,50 @@
+ "1. Tang kich thuoc anh": {
+            "Truoc": "64x64 pixels",
+            "Sau": "96x96 pixels",
+            "Ly do": "Anh lon hon chua nhieu thong tin chi tiet hon"
+        },
+        "2. Cải tiến Data Augmentation": {
+            "Trước": "rotation_range=20, zoom_range=0.2",
+            "Sau": "rotation_range=30, zoom_range=0.3, brightness_range=[0.7, 1.3]",
+            "Lý do": "Tăng cường dữ liệu đa dạng hơn, giảm overfitting"
+        },
+        "3. Tăng số Conv Blocks": {
+            "Trước": "3 blocks với filters [32, 64, 128]",
+            "Sau": "4 blocks với filters [64, 128, 256, 512]",
+            "Lý do": "Model sâu hơn, học được features phức tạp hơn"
+        },
+        "4. Thêm L2 Regularization": {
+            "Trước": "Không có regularization",
+            "Sau": "kernel_regularizer=l2(0.001)",
+            "Lý do": "Giảm overfitting, cải thiện generalization"
+        },
+        "5. Sử dụng GlobalAveragePooling": {
+            "Trước": "Flatten()",
+            "Sau": "GlobalAveragePooling2D()",
+            "Lý do": "Giảm số parameters, tránh overfitting"
+        },
+        "6. Tăng số Dense layers": {
+            "Trước": "2 Dense layers [512, 256]",
+            "Sau": "3 Dense layers [1024, 512, 256]",
+            "Lý do": "Tăng khả năng học patterns phức tạp"
+        },
+        "7. Cải tiến Learning Rate": {
+            "Trước": "Learning rate cố định",
+            "Sau": "Learning rate scheduling + ReduceLROnPlateau",
+            "Lý do": "Tối ưu hóa quá trình học"
+        },
+        "8. Tăng số Epochs": {
+            "Trước": "50 epochs",
+            "Sau": "100 epochs",
+            "Lý do": "Model học lâu hơn, đạt convergence tốt hơn"
+        },
+        "9. Thêm Top-3 Accuracy": {
+            "Trước": "Chỉ theo dõi accuracy",
+            "Sau": "Theo dõi cả top-3 accuracy",
+            "Lý do": "Đánh giá model toàn diện hơn"
+        },
+        "10. Tăng Early Stopping Patience": {
+            "Trước": "patience=10",
+            "Sau": "patience=15",
+            "Lý do": "Cho model thời gian học lâu hơn"
+        }
