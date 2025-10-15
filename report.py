@@ -1,7 +1,10 @@
 import pandas as pd
 import re
 import warnings
-warnings.filterwarnings("ignore")
+from sklearn.pipeline import Pipeline
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.ensemble import RandomForestClassifier
+
 
 def preprocess_text(text: str) -> str:
     text = str(text).lower()
@@ -22,8 +25,18 @@ def load_data(csv_path: str = "spam.csv"):
     y = df["label"].astype(int).values
     return X, y
 
+def build_pipeline():
+    return Pipeline(
+        steps=[
+            ("tfidf", TfidfVectorizer(max_features=5000, stop_words="english", ngram_range=(1, 2), min_df=2, max_df=0.95)),
+            ("clf", RandomForestClassifier(n_estimators=200, random_state=42, max_depth=20, min_samples_split=5, min_samples_leaf=2)),
+        ]
+    )
+
 if __name__ == "__main__":
     X, y = load_data()
     print(f"Successfully loaded {len(X)} data samples!")
-    print("Example of a processed text sample:", X[0])
-    print("Corresponding label:", y[0])
+    
+    model_pipeline = build_pipeline()
+    print("Successfully built the model pipeline!")
+    print(model_pipeline)
