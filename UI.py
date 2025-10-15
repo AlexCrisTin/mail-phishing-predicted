@@ -91,5 +91,4 @@ safe_prob_value = ctk.CTkLabel(app,
                                font=ctk.CTkFont(size=36, weight="normal"))
 safe_prob_value.grid(row=8, column=0, padx=20, pady=(0, 20), sticky="w")
 
-# Chạy ứng dụng
 app.mainloop()
