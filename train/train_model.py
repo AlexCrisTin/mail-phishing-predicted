@@ -133,18 +133,6 @@ def predict_email_spam(email_text):
         'safe_probability': probability[0]
     }
 
-# Test thử với một số email mẫu
-test_emails = [
-    "Hello, this is a normal business email about our meeting tomorrow.",
-    "URGENT! WIN $1000 NOW! Click here to claim your prize!",
-    "Thanks for your email. I will get back to you soon.",
-    "FREE MONEY! LIMITED TIME OFFER! Don't miss out!"
-]
-
-print("\n" + "="*50)
-print("TESTING MODEL WITH SAMPLE EMAILS:")
-print("="*50)
-
 for i, email in enumerate(test_emails, 1):
     result = predict_email_spam(email)
     print(f"\nEmail {i}: {email[:50]}...")
