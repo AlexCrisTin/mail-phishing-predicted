@@ -1,3 +1,40 @@
+# Định nghĩa các ngưỡng (thresholds)
+TOXIC_THRESHOLD_HIGH = 0.60
+TOXIC_THRESHOLD_LOW = 0.40
+
+# Chuỗi mẫu cho nội dung Cấm và Nghi ngờ
+FORBIDDEN_PHRASE = "You are a [Cấm: Xúc phạm mẫu] person."
+SUSPICIOUS_PHRASE = "Please click here to update your subscription details." # Nội dung có thể nghi ngờ
+
+# --- Hàm mô phỏng phân loại ---
+def classify_email(email_content):
+    """Mô phỏng hàm phân loại, nhận diện mức độ Toxic: Safe, Review, hoặc Toxic."""
+    standardized_content = email_content.lower()
+    
+    # 1. Trường hợp Toxic rõ ràng
+    if "[cấm: xúc phạm mẫu]" in standardized_content:
+        toxic_prob = 0.920
+        safe_prob = 0.080
+    # 2. Trường hợp Nghi ngờ (Suspicious)
+    elif "click here" in standardized_content or "update subscription" in standardized_content:
+        # Giả định xác suất rơi vào vùng nghi ngờ (ví dụ: 55%)
+        toxic_prob = 0.550 
+        safe_prob = 0.450
+    # 3. Trường hợp Safe mặc định
+    else:
+        toxic_prob = 0.050
+        safe_prob = 0.950
+
+    # Xác định trạng thái cuối cùng dựa trên xác suất
+    if toxic_prob >= TOXIC_THRESHOLD_HIGH:
+        result = "Toxic Email"
+    elif toxic_prob > TOXIC_THRESHOLD_LOW and toxic_prob < TOXIC_THRESHOLD_HIGH:
+        result = "Review Required" # Trạng thái mới: Cần xem xét sau
+    else:
+        result = "Safe Email"
+
+    return standardized_content, result, toxic_prob, safe_prob
+
 # --- Thiết lập cửa sổ chính ---
 ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("blue") 
