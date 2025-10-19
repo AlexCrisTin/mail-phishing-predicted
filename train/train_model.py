@@ -8,31 +8,29 @@ import joblib
 import re
 import string
 
-
+#read data
 df = pd.read_csv('spam.csv')
 print(df.head())
 print("\nDataset columns:", df.columns)
 print("\nEmail type statistics:", df['Email Type'].value_counts())
 
-
 df = df.dropna(subset=['Email Text', 'Email Type'])
 df['Email Text'] = df['Email Text'].astype(str)
-
-
+# clean text
 def preprocess_text(text):
     text = text.lower()
     text = re.sub(r'[^a-zA-Z\s]', '', text)
     text = ' '.join(text.split())
     return text
-
+# processed text
 df['processed_text'] = df['Email Text'].apply(preprocess_text)
-
+# text length
 df['text_length'] = df['processed_text'].apply(len)
 df['word_count'] = df['processed_text'].apply(lambda x: len(x.split()))
-
+# label mapping
 label_mapping = {'Safe Email': 0, 'Phishing Email': 1}
 df['label'] = df['Email Type'].map(label_mapping)
-
+# label distribution
 print("\nLabel distribution after conversion:")
 print(df['label'].value_counts())
 #tfidf
