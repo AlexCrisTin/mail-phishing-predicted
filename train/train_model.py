@@ -10,39 +10,32 @@ import string
 
 
 df = pd.read_csv('spam.csv')
-
-
 print(df.head())
 print("\nDataset columns:", df.columns)
 print("\nEmail type statistics:", df['Email Type'].value_counts())
 
-# 2. Loại bỏ missing data và chuẩn hóa
+
 df = df.dropna(subset=['Email Text', 'Email Type'])
 df['Email Text'] = df['Email Text'].astype(str)
 
-# 3. Tiền xử lý text
+
 def preprocess_text(text):
     text = text.lower()
     text = re.sub(r'[^a-zA-Z\s]', '', text)
     text = ' '.join(text.split())
     return text
 
-print("Preprocessing text...")
 df['processed_text'] = df['Email Text'].apply(preprocess_text)
 
-# 4. Feature engineering
 df['text_length'] = df['processed_text'].apply(len)
 df['word_count'] = df['processed_text'].apply(lambda x: len(x.split()))
 
-# 5. Chuyển đổi nhãn thành số
 label_mapping = {'Safe Email': 0, 'Phishing Email': 1}
 df['label'] = df['Email Type'].map(label_mapping)
 
 print("\nLabel distribution after conversion:")
 print(df['label'].value_counts())
-
-# 6. Text vectorization
-
+#tfidf
 vectorizer = TfidfVectorizer(
     max_features=5000, 
     stop_words='english',
@@ -52,21 +45,14 @@ vectorizer = TfidfVectorizer(
 )
 X_text = vectorizer.fit_transform(df['processed_text'])
 
-# 7. Kết hợp các đặc trưng
 X_other = df[['text_length', 'word_count']].values
 X = np.hstack([X_text.toarray(), X_other])
 y = df['label']
 
-# 8. Train/test split
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42, stratify=y
 )
-
-print(f"\nData size:")
-print(f"Train: {X_train.shape[0]} samples")
-print(f"Test: {X_test.shape[0]} samples")
-
-# 9. Huấn luyện mô hình
+#random forest train
 model = RandomForestClassifier(
     n_estimators=100,
     random_state=42,
@@ -76,15 +62,12 @@ model = RandomForestClassifier(
 )
 model.fit(X_train, y_train)
 
-# 10. Đánh giá mô hình
-print("\nEvaluating model...")
+# accuracy
 y_pred = model.predict(X_test)
 print("\nClassification report:\n", classification_report(y_test, y_pred))
 print("Confusion matrix:\n", confusion_matrix(y_test, y_pred))
 print("Accuracy:", accuracy_score(y_test, y_pred))
 
-# 11. Lưu model và vectorizer
-print("\nSaving model and vectorizer...")
+# save model
 joblib.dump(model, 'spam_classifier_model.pkl')
 joblib.dump(vectorizer, 'spam_tfidf_vectorizer.pkl')
-
