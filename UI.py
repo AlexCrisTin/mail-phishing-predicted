@@ -1,3 +1,6 @@
+import customtkinter as ctk
+from tkinter import messagebox 
+
 # Định nghĩa các ngưỡng (thresholds)
 TOXIC_THRESHOLD_HIGH = 0.60
 TOXIC_THRESHOLD_LOW = 0.40
@@ -34,6 +37,55 @@ def classify_email(email_content):
         result = "Safe Email"
 
     return standardized_content, result, toxic_prob, safe_prob
+
+# --- Hàm xử lý sự kiện nút "Phân loại" ---
+def classification_event():
+    """Lấy nội dung, phân loại và cập nhật giao diện. Thêm logic chặn/xem xét."""
+    email_content = email_input_textbox.get("1.0", "end-1c")
+
+    if not email_content.strip():
+        standardized_content = ""
+        result = "N/A"
+        toxic_prob = 0.000
+        safe_prob = 0.000
+    else:
+        standardized_content, result, toxic_prob, safe_prob = classify_email(email_content)
+
+        # --- LOGIC TỰ ĐỘNG CHẶN/XEM XÉT ---
+        if result == "Toxic Email" and auto_block_var.get() == 1:
+            messagebox.showwarning(
+                "CẢNH BÁO: ĐÃ TỰ ĐỘNG CHẶN",
+                f"Hệ thống đã tự động chặn email Toxic. Xác suất Toxic: {toxic_prob:.3f}"
+            )
+        elif result == "Review Required":
+            # Thông báo chuyển vào khu vực xem xét
+            messagebox.showinfo(
+                "THÔNG BÁO: CHUYỂN VÀO XEM XÉT",
+                f"Email được đánh dấu Nghi ngờ và đã chuyển vào thư mục 'Xem xét sau'. Xác suất Toxic: {toxic_prob:.3f}"
+            )
+        # ---------------------------------
+
+    # Cập nhật Nội dung đã chuẩn hóa
+    standardized_textbox.configure(state="normal")
+    standardized_textbox.delete("1.0", "end")
+    standardized_textbox.insert("1.0", standardized_content)
+    standardized_textbox.configure(state="disabled")
+
+    # Cập nhật kết quả phân loại và màu sắc
+    if result == "Safe Email":
+        result_label.configure(text=f"Kết quả: {result}", fg_color="#2e7d32") # Xanh lá
+    elif result == "Toxic Email":
+        result_label.configure(text=f"Kết quả: {result}", fg_color="#b80000") # Đỏ cho Toxic
+    elif result == "Review Required":
+        result_label.configure(text=f"Kết quả: {result}", fg_color="#3a86ff") # Xanh dương cho Nghi ngờ/Xem xét
+    else:
+        result_label.configure(text=f"Kết quả: {result}", fg_color="#434343")
+
+
+    # Cập nhật xác suất
+    toxic_prob_value.configure(text=f"{toxic_prob:.3f}")
+    safe_prob_value.configure(text=f"{safe_prob:.3f}")
+
 
 # --- Thiết lập cửa sổ chính ---
 ctk.set_appearance_mode("dark")
@@ -103,9 +155,9 @@ standardized_textbox.configure(state="disabled")
 
 # --- 4. Kết quả Phân loại (Hộp màu) ---
 result_label = ctk.CTkLabel(app, 
-                            text="Kết quả: Review Required", 
+                            text="Kết quả: Review Required", # Kết quả mặc định: Nghi ngờ
                             font=ctk.CTkFont(size=18, weight="bold"),
-                            fg_color="#3a86ff", 
+                            fg_color="#3a86ff", # Màu Xanh Dương cho Xem xét
                             corner_radius=6,
                             height=40)
 result_label.grid(row=4, column=0, padx=20, pady=(20, 30), sticky="w")
@@ -115,7 +167,7 @@ toxic_title = ctk.CTkLabel(app, text="Xác suất Toxic", font=ctk.CTkFont(size=
 toxic_title.grid(row=5, column=0, padx=20, pady=(5, 0), sticky="w")
 
 toxic_prob_value = ctk.CTkLabel(app, 
-                                   text="0.550", 
+                                   text="0.550", # Xác suất ở mức nghi ngờ
                                    font=ctk.CTkFont(size=36, weight="normal"))
 toxic_prob_value.grid(row=6, column=0, padx=20, pady=(0, 20), sticky="w")
 
@@ -124,8 +176,9 @@ safe_title = ctk.CTkLabel(app, text="Xác suất Safe", font=ctk.CTkFont(size=16
 safe_title.grid(row=7, column=0, padx=20, pady=(5, 0), sticky="w")
 
 safe_prob_value = ctk.CTkLabel(app, 
-                               text="0.450", 
+                               text="0.450", # Xác suất ở mức nghi ngờ
                                font=ctk.CTkFont(size=36, weight="normal"))
 safe_prob_value.grid(row=8, column=0, padx=20, pady=(0, 20), sticky="w")
 
+# Chạy ứng dụng
 app.mainloop()
