@@ -5,7 +5,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import re
-from generate_wordcloud import WordCloud
+from wordcloud import WordCloud
 from collections import Counter
 import seaborn as sns
 
