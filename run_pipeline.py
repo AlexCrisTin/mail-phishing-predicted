@@ -5,7 +5,7 @@ from pipeline import full_spam_pipeline
 
 print("Bắt đầu quy trình: Huấn luyện -> Dự đoán -> Xuất file...")
 print("Đang tải và chuẩn bị dữ liệu...")
-df = pd.read_csv('train/spam.csv')
+df = pd.read_csv('spam.csv')
 df = df.dropna(subset=['Email Text', 'Email Type'])
 df['processed_text'] = df['Email Text'].astype(str)
 df['text_length'] = df['Email Text'].astype(str).apply(len)
