@@ -5,7 +5,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import re
-from generate_wordcloud import WordCloud
+from wordcloud import WordCloud
 from collections import Counter
 import seaborn as sns
 
@@ -18,7 +18,7 @@ def preprocess_text(text: str) -> str:
     text = ' '.join(text.split())
     return text
 
-def load_data(csv_path: str = "spam.csv"):
+def load_data(csv_path: str = "train/spam.csv"):
     """Load and preprocess the spam dataset"""
     try:
         df = pd.read_csv(csv_path)
