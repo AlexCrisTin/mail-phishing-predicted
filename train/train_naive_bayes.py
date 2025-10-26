@@ -83,7 +83,7 @@ def main():
     )
 
     model = train_model(X_train, y_train)
-    logging.info("\n\n=== SUMMARY ===")
+    logging.info("=== SUMMARY ===")
     evaluate_model(model, X_test, y_test)
     save_model(model, vectorizer, model_path, vectorizer_path)
 

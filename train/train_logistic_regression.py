@@ -28,7 +28,7 @@ def preprocess_text(text: str) -> str:
 def main():
     logging.info("=== BEGINNING LOGISTIC REGRESSION ===")
 
-    df = pd.read_csv("spam.csv")
+    df = pd.read_csv("train/spam.csv")
     logging.info(f"Tổng {len(df)} dòng, cột: {list(df.columns)}")
     logging.info(f"Phân bố loại email:\n{df['Email Type'].value_counts()}")
 
@@ -71,9 +71,9 @@ def main():
     y_pred = model.predict(X_test)
     acc = accuracy_score(y_test, y_pred)
 
-    logging.info("\n\n=== SUMMARY ===")
+    logging.info("=== SUMMARY ===")
     logging.info(f"Accuracy: {acc:.4f}")
-    logging.info(f"\nConfusion matrix:\n{confusion_matrix(y_test, y_pred)}")
+    logging.info(f"Confusion matrix:\n{confusion_matrix(y_test, y_pred)}")
     logging.info(f"\n{classification_report(y_test, y_pred)}")
 
     joblib.dump(model, "train/spam_logistic_regression_model.pkl")
