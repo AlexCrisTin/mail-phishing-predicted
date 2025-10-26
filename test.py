@@ -140,7 +140,7 @@ class EmailClassifierApp(ctk.CTk):
     def _update_all_results(self, all_results):
         # Reset all frames to default
         for model_name in self.result_widgets:
-            self.result_widgets[model_name]["frame"].configure(fg_color="#242424")
+            self.result_widgets[model_name]["frame"].configure(fg_color="#242424", border_width=0)
 
         # Determine consensus
         phishing_votes = sum(1 for result, _ in all_results.values() if result == "Phishing Detected")
@@ -170,6 +170,8 @@ class EmailClassifierApp(ctk.CTk):
 
             if model_name == best_model:
                 widgets["frame"].configure(border_color="#E5FF00", border_width=2)
+            else:
+                widgets["frame"].configure(border_width=0)
 
 if __name__ == "__main__":
     app = EmailClassifierApp()
