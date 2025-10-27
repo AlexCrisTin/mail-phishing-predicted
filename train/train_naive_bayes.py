@@ -9,7 +9,7 @@ from sklearn.metrics import classification_report, confusion_matrix, accuracy_sc
 
 logging.basicConfig(
     level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(message)s",
+    format="[%(levelname)s] %(message)s",
     handlers=[logging.StreamHandler()]
 )
 
@@ -58,10 +58,10 @@ def train_model(X_train, y_train):
 
 def evaluate_model(model, X_test, y_test):
     y_pred = model.predict(X_test)
-
-    logging.info("\nClassification report:\n" + classification_report(y_test, y_pred))
-    logging.info("Confusion matrix:\n" + str(confusion_matrix(y_test, y_pred)))
+    
     logging.info(f"Accuracy: {accuracy_score(y_test, y_pred):.4f}")
+    logging.info("Confusion matrix:\n" + str(confusion_matrix(y_test, y_pred)))
+    logging.info("\n" + classification_report(y_test, y_pred))
 
 
 def save_model(model, vectorizer, model_path, vectorizer_path):
