@@ -1,11 +1,3 @@
-"""
-File tích hợp để load và so sánh các mô hình đã được train từ 3 file:
-- train_logistic_regression.py
-- train_model.py (Random Forest)
-- train_naive_bayes.py
-
-Tạo confusion matrix, ROC curves và các biểu đồ so sánh hiệu suất
-"""
 
 import warnings
 warnings.filterwarnings("ignore")
