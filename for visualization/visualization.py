@@ -1,7 +1,4 @@
-"""
-File tạo hình ảnh minh họa tổng hợp cho dự án phân tích email spam/phishing
-Tạo các biểu đồ trực quan để hiểu rõ dữ liệu và hiệu suất mô hình
-"""
+
 
 import warnings
 warnings.filterwarnings("ignore")

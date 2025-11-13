@@ -101,7 +101,7 @@ def prepare_features(df, vectorizer, model_type):
         X = np.hstack([X_text.toarray(), X_other])
         return X
 
-def create_comprehensive_confusion_matrices(models, df, output_dir="plots"):
+def create_comprehensive_confusion_matrices(models, df, output_dir="photo result"):
     """Tạo confusion matrix cho tất cả mô hình"""
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
@@ -148,7 +148,7 @@ def create_comprehensive_confusion_matrices(models, df, output_dir="plots"):
     plt.close()
     print(f"Created integrated confusion matrices: {output_dir}/integrated_confusion_matrices.png")
 
-def create_comprehensive_roc_curves(models, df, output_dir="plots"):
+def create_comprehensive_roc_curves(models, df, output_dir="photo result"):
     """Tạo ROC curves cho tất cả mô hình"""
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
@@ -196,7 +196,7 @@ def create_comprehensive_roc_curves(models, df, output_dir="plots"):
     plt.close()
     print(f"Created integrated ROC curves: {output_dir}/integrated_roc_curves.png")
 
-def create_comprehensive_performance_comparison(models, df, output_dir="plots"):
+def create_comprehensive_performance_comparison(models, df, output_dir="photo result"):    
     """Tạo biểu đồ so sánh hiệu suất tổng hợp"""
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
@@ -258,7 +258,7 @@ def create_comprehensive_performance_comparison(models, df, output_dir="plots"):
     
     return results
 
-def create_detailed_classification_reports(models, df, output_dir="plots"):
+def create_detailed_classification_reports(models, df, output_dir="photo result"): 
     """Tạo báo cáo phân loại chi tiết cho từng mô hình"""
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
@@ -311,7 +311,7 @@ def generate_integrated_analysis():
     print(f"Loaded {len(models)} models successfully")
     
     # Tạo thư mục plots
-    output_dir = "plots"
+    output_dir = "photo result"
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
     
